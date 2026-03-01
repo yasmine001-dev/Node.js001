@@ -2,7 +2,6 @@ const data = require("../data.js");
 
 const productController = (req, res) => {
   if (req.method === "GET") {
-    // handle all products and product by ID
     return getProduct(req, res);
   } else if (req.method === "POST") {
     return createProduct(req, res); // :fix001
@@ -18,11 +17,11 @@ const productController = (req, res) => {
   return res.end(JSON.stringify({ message: "method not allowed" })); // :fix001
 };
 function updateProduct(req, res) {
-  if (!req.url.startsWith("/products/")) {
+  if (!req.url.startsWith("/api/products/")) { // :fix001 :fix002
     res.writeHead(404, { "content-type": "application/json" }); // :fix001
     return res.end(JSON.stringify({ message: "route not found" })); // :fix001
   }
-  const id = req.url.split("/")[2];
+  const id = req.url.split("/")[3]; // :fix001 :fix002
   const index = data.products.findIndex((element) => element.id == id); // :fix001
 
   if (index === -1) {
@@ -44,11 +43,6 @@ function updateProduct(req, res) {
           product: data.products[index],
         }),
       );
-      // 6. حدثي بيانات المنتج في الـ Array
-      // (تلميح: ادمجي القديم مع الجديد عشان متفقديش الـ ID:
-      // data.products[index] = { ...data.products[index], ...parsedBody })
-
-      // 7. رجعي 200 OK ومعاها رسالة النجاح والمنتج بعد التعديل
     } catch (error) {
       res.writeHead(400, { "content-type": "application/json" });
       return res.end(JSON.stringify({ message: "Invalid JSON data" }));
@@ -56,11 +50,11 @@ function updateProduct(req, res) {
   });
 }
 function replaceProduct(req, res) {
-  if (!req.url.startsWith("/products/")) {
+  if (!req.url.startsWith("/api/products/")) { // :fix001 :fix002
     res.writeHead(404, { "content-type": "application/json" }); // :fix001
     return res.end(JSON.stringify({ message: "route not found" })); // :fix001
   }
-  const id = req.url.split("/")[2];
+  const id = req.url.split("/")[3]; // :fix001 :fix002
   const index = data.products.findIndex((element) => element.id == id); // :fix001
 
   if (index === -1) {
@@ -73,8 +67,6 @@ function replaceProduct(req, res) {
     body += chunk.toString();
   });
   req.on("end", () => {
-    //      let newProduct = { id: newId, ...JSON.parse(body) };
-
     try {
       data.products[index] = {
         id: data.products[index].id,
@@ -94,11 +86,11 @@ function replaceProduct(req, res) {
   });
 }
 function getProduct(req, res) {
-  if (req.url === "/products") {
+  if (req.url === "/api/products") { // :fix002
     res.writeHead(200, { "content-type": "application/json" });
     return res.end(JSON.stringify(data.products));
-  } else if (req.url.startsWith("/products/")) {
-    const id = req.url.split("/")[2];
+  } else if (req.url.startsWith("/api/products/")) { // :fix002
+    const id = req.url.split("/")[3]; // :fix002
 
     const product = data.products.find((element) => element.id == id); // :fix001
     if (product) {
@@ -151,13 +143,13 @@ function createProduct(req, res) {
 
 function deleteProduct(req, res) {
   // :fix001
-  if (!req.url.startsWith("/products/")) {
+  if (!req.url.startsWith("/api/products/")) { // :fix001 :fix002
     // :fix001
     res.writeHead(404, { "content-type": "application/json" }); // :fix001
     return res.end(JSON.stringify({ message: "route not found" })); // :fix001
   }
 
-  const id = req.url.split("/")[2]; // :fix001
+  const id = req.url.split("/")[3]; // :fix001 :fix002
   const index = data.products.findIndex((element) => element.id == id); // :fix001
 
   if (index === -1) {

@@ -1,6 +1,6 @@
 const data = require("../data.js"); // :fix001
-// GET /api/categories – Get all categories
-// POST /api/categories – Add new category
+// GET /api/categories � Get all categories
+// POST /api/categories � Add new category
 
 const categoryController = (req, res) => {
   if (req.method === "GET") {
@@ -12,9 +12,9 @@ const categoryController = (req, res) => {
   return res.end(JSON.stringify({ message: "method not allowed" }));
 };
 function getCategory(req, res) {
-  if (req.url === "/categories") {
+  if (req.url === "/api/categories") { // :fix002
     res.writeHead(200, { "content-type": "application/json" });
-    return res.end(JSON.stringify(data.users));
+    return res.end(JSON.stringify(data.categories)); // :fix002
   }
   res.writeHead(404, { "content-type": "application/json" });
   return res.end(JSON.stringify({ message: "route not found" }));
@@ -51,3 +51,5 @@ function createCategory(req, res) {
       }
     });
 }
+// كنت ناسية أعملها
+module.exports = categoryController; // :fix002
