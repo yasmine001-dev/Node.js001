@@ -1,5 +1,5 @@
 Files responsabilities
-v001 using CJS(CommonJS)
+v002 using ESM(ECMAScript Modules)
 server.js -> creating and intiating server
 routes.js -> endpoints in app
 controllers/ -> business logic and CRUD operations
