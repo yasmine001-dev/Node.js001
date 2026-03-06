@@ -1,16 +1,15 @@
-﻿import mongoose from "mongoose";
-
-const categorySchema = new mongoose.Schema(
-  {
-    name: {
-      type: String,
-      required: [true, "Category name is required"],
-      unique: true, 
-    },
+﻿import { Schema, model } from "mongoose";
+// One Category → Many Products
+const categorySchema = new Schema({
+  name: {
+    type: String,
+    required: [true, "Category name is required"],
+    unique: true,
+    trim: true, 
+  minlength: [2, "Category name must be at least 2 characters"],
+  maxlength: [50, "Category name can't exceed 50 characters"],
+  lowercase: true //labtop === LAPTOP
   },
-
-);
-export default mongoose.model("Category", categorySchema);
-
-// const Category = model("Category", categorySchema);
-// export default Category;
+},
+{ timestamps: true });
+export default model("Category", categorySchema);

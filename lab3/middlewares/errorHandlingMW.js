@@ -1,30 +1,36 @@
-﻿const errorHandlingMW = (err, req, res, next) => {
-  let statusCode = err.statusCode || 500;
-  let status = err.status || "error";
-  let message = err.message || "Internal Server Error";
+﻿export default (err, req, res, next) => {
+  console.error(err); // Log server-side error for debugging
 
-  // Invalid Mongo ObjectId
-  if (err.name === "CastError") {
+  // Default status code & message
+  let statusCode = err.statusCode || 500;
+  let message = err.message || "Internal Server Error";
+  let errors = err.errors;
+
+  // Validation Error (Schema validation)
+  if (err.name === "ValidationError") {
     statusCode = 400;
-    message = "Invalid ID format";
+
+    errors = Object.values(err.errors).map((el) => ({
+      field: el.path,
+      message: el.message,
+    }));
+
+    message = "Validation failed";
   }
 
-  // Duplicate key
+  // Duplicate Key Error
   if (err.code === 11000) {
     statusCode = 400;
-    message = "Duplicate field value";
+
+    const field = Object.keys(err.keyValue)[0];
+    const value = err.keyValue[field];
+
+    message = `${field} '${value}' already exists`;
   }
 
-
   res.status(statusCode).json({
-    status: statusCode.toString().startsWith("4") ? "fail" : "error",
+    status: "ُError something went wrong",
     message,
+    ...(errors && { errors }),
   });
 };
-
-export default errorHandlingMW;
-
-// {
-//   "status": "fail",
-//   "message": "Category name is required"
-// }

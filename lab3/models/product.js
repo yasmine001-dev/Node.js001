@@ -1,20 +1,26 @@
-﻿import mongoose from "mongoose";
+﻿import { Schema, model } from "mongoose";
 
-const productSchema = new mongoose.Schema({
-  name: {
-    type: String,
-    required: [true, "Product name is required"],
-    minlength: [3, " Product name must be more than 3 characters"],
+const productSchema = new Schema(
+  {
+    name: {
+      type: String,
+      required: [true, "Schema:Product name is required"],
+      minlength: [3, "Schema:Product name must be more than 3 characters"],
+      maxlength: [100, "Schema:Product name can't exceed 100 characters"],
+      trim: true,
+    },
+    price: {
+      type: Number,
+      required: [true, "Schema:Please enter product price"],
+      min: [0, "Schema:Price cannot be negative"],
+      max: [100000, "Schema:Please enter a valid price"],
+    },
+    category: {
+      type: Schema.Types.ObjectId,
+      ref: "Category",
+      required: true,
+    },
   },
-  price: {
-    type: Number,
-    required: [true, "Please enter product price"],
-    min: [0, "Price cannot be negative"],
-     max: [100000, "Please enter a valid price"],
-  },
-  categoryId: {
-    type: String,
-    required: [true, "Category is required"]
-  },
-});
-export default mongoose.model("Product", productSchema);
+  { timestamps: true },
+);
+export default model("Product", productSchema);
