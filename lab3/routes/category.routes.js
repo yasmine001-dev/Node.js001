@@ -3,17 +3,17 @@ import {
   getAllCategories,
   addCategory,
 } from "../controllers/category.controller.js";
-import {addCategoryValidator} from "../validations/categoryValidation.js";
-import validationResult from "../validations/validateResults.js";
-import { idParamValidator } from "../validations/validateMongoID.js";
+import { validate } from "../validations/validate.js"
+import { addCategorySchema } from "../validations/categorySchema.js"
 const router = Router();
 
 router.get("/", getAllCategories);
 router.post(
   "/",
-  addCategoryValidator,
-  validationResult,
+  validate(addCategorySchema),
   addCategory,
 );
+
+
 
 export default router;

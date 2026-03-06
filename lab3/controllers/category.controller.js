@@ -13,9 +13,9 @@ export const addCategory = async (req, res, next) => {
   try {
     const { name } = req.body;
 
-    if (!name) {
-      return next(new HTTPError(400, "Category name is required"));
-    }
+    // if (!name) {
+    //   return next(new HTTPError(400, "Category name is required"));
+    // }
 
     const newCategory = await Category.create({ name });
 
